@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+# default duration of 4 hours
+if [ $# == 1 ]; then
+  hours=$1
+else
+  hours=4
+fi
+
+duration=$(expr "$hours" '*' "60")
+
+# set bitwarden session
+BW_SESSION="$(bw unlock --raw)"
+
+# make temp private key file
+key=$(mktemp)
+chmod 600 $key
+
+set -x
+
+bw get item github.com | jq .notes -r > "$key"
+
+ssh-add -t $duration $key
+
+rm $key
