@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -eu -o pipefail
-
 # default duration of 4 hours
 if [ $# == 1 ]; then
   hours=$1
@@ -12,16 +10,16 @@ fi
 duration=$(expr "$hours" '*' "60")
 
 # set bitwarden session
-BW_SESSION="$(bw unlock --raw)"
+session="$(bw unlock --raw)"
 
-# make temp private key file
-key=$(mktemp)
-chmod 600 $key
+# annoyingly enough, bw unlock will print either the session key or "Invalid Master Password" to stdout
+# the only way to tell which one it did is to use the exit code
+if [ $? != 0 ]; then
+  echo "$session"
+  exit 1
+fi
 
-set -x
+set -euo pipefail
 
-bw get item github.com | jq .notes -r > "$key"
-
-ssh-add -t $duration $key
-
-rm $key
+# grab private key from secret
+ssh-add -t $duration <(BW_SESSION=$session bw get item github.com | jq .notes -r)
