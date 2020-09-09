@@ -8,6 +8,10 @@ function gimme() {
     brew install "$@"
 }
 
+function getme() {
+    brew cask install "$@"
+}
+
 # copy all the .*
 cp -r dots/. ~/
 
@@ -24,6 +28,9 @@ gimme neovim
 
 gimme bitwarden-cli
 
+# window snapping
+getme rectangle
+
 # neovim plugins
 gimme python3 pip3
 sudo pip3 install pynvim
@@ -35,3 +42,6 @@ fi
 # reload bashrc
 source ~/.bashrc
 
+echo "Additional installations"
+# mouse4/mouse5 -> backward/forward
+echo "https://github.com/archagon/sensible-side-buttons/releases"
