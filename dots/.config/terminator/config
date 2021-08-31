@@ -17,6 +17,7 @@
   switch_to_tab_8 = <Alt>8
   switch_to_tab_9 = <Alt>9
   switch_to_tab_10 = <Alt>0
+  layout_launcher = None
 [profiles]
   [[default]]
     cursor_color = "#aaaaaa"

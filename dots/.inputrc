@@ -1,0 +1,3 @@
+# Alt+H/L to move by whole words
+"\eh": backward-word
+"\el": forward-word
