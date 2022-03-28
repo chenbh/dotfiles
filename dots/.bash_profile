@@ -12,6 +12,7 @@ function parse_git_branch() {
 }
 
 export PS1="\[\e[34;40m\]\W\[\e[m\]\[\e[32m\]\`parse_git_branch\`\[\e[m\]\\$ "
+export PATH="$PATH:$HOME/bin"
 
 
 ### COMPLETION

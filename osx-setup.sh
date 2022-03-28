@@ -18,6 +18,8 @@ cp -r dots/. ~/
 # install any custom scripts
 cp -r scripts/. ~/bin/
 
+gimme python3 pip3
+
 gimme the_silver_searcher
 
 gimme jq
@@ -32,7 +34,6 @@ gimme bitwarden-cli
 getme rectangle
 
 # neovim plugins
-gimme python3 pip3
 sudo pip3 install pynvim
 
 if ! [ -e ~/.config/nvim ]; then
