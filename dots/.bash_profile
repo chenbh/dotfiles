@@ -1,20 +1,17 @@
 ### PROMPT
+source ~/.git-prompt.sh
+export PS1='\[\e[34m\]\W\[\e[32m\]$(__git_ps1 "[%s]")\[\e[m\]\$ '
 
-# get current branch in git repo
-function parse_git_branch() {
-	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
-	if [ ! "${BRANCH}" == "" ]
-	then
-		echo "[${BRANCH}]"
-	else
-		echo ""
-	fi
-}
 
-export PS1="\[\e[34;40m\]\W\[\e[m\]\[\e[32m\]\`parse_git_branch\`\[\e[m\]\\$ "
+### ENV VARS
 export PATH="$PATH:$HOME/bin"
+export EDITOR="nvim"
 
 
 ### COMPLETION
 [[ -r "/usr/local/etc/profile.d/autojump.sh" ]] && . "/usr/local/etc/profile.d/autojump.sh"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+
+### ALIAS
+alias vim='nvim'
