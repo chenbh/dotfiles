@@ -4,12 +4,20 @@ set -ux
 
 VIM_CONFIG="https://github.com/chenbh/dotnvim.git"
 
-function gimme() {
+gimme() {
     sudo apt-get install -y "$@"
 }
 
-function getme() {
+getme() {
     sudo snap install "$@"
+}
+
+update_rc() {
+  read -r -d '' str
+  grep "$str" ~/.bashrc
+  if [ $? != 0 ]; then
+    echo "source /usr/share/autojump/autojump.bash" >> ~/.bashrc
+  fi
 }
 
 # copy all the .*
@@ -28,8 +36,7 @@ gimme silversearcher-ag jq
 
 # autojump
 gimme autojump
-sudo mkdir -p /usr/local/etc/profile.d
-sudo cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
+update_rc "source /usr/share/autojump/autojump.bash"
 
 # terminal
 gimme terminator
@@ -55,7 +62,7 @@ fi
 
 
 # remap caps lock -> escape
-sudo cat > /tmp/keyboard <<EOF
+cat | sudo tee /etc/default/keyboard <<EOF
 # KEYBOARD CONFIGURATION FILE
 
 # Consult the keyboard(5) manual page.
@@ -71,6 +78,19 @@ EOF
 sudo mv /tmp/keyboard /etc/default/keyboard
 
 sudo apt-get autoremove -y
+
+update_rc <<"EOF"
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+export PS1="\u@\h \[\e[32m\]\w \[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ "
+EOF
+
+
+update_rc <<"EOF"
+[[ -r "/usr/local/etc/profile.d/autojump.sh" ]] && . "/usr/local/etc/profile.d/autojump.sh"
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+EOF
 
 # reload bashrc
 source ~/.bash_profile
