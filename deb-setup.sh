@@ -32,7 +32,7 @@ sudo apt update
 gimme curl build-essential ca-certificates xclip python3 python3-pip
 
 # misc tools
-gimme silversearcher-ag jq
+gimme ripgrep jq
 
 # autojump
 gimme autojump

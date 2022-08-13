@@ -20,7 +20,7 @@ cp -r scripts/. ~/bin/
 
 gimme python3 pip3
 
-gimme the_silver_searcher
+gimme ripgrep
 
 gimme jq
 
