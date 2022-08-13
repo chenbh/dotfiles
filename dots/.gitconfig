@@ -10,3 +10,5 @@
 	pushInsteadOf = git://github.com/
 [trailer]
 	ifexists = addIfDifferent
+[submodule]
+	recurse = true
