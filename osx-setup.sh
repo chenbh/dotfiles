@@ -24,6 +24,8 @@ gimme ripgrep
 
 gimme jq
 
+gimme fd
+
 gimme autojump
 
 gimme neovim
