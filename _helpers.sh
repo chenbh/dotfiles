@@ -28,14 +28,24 @@ EOF
 }
 
 write_bashrc() {
+# run cmd in subshell to not mess up any global `set -e`
+(
+  set +e
   read -r -d '' str
-  grep "$str" ~/.bashrc
+  grep -F "$str" ~/.bashrc
   if [ $? != 0 ]; then
+    # add newline
+    echo "" >> ~/.bashrc
     echo "$str" >> ~/.bashrc
   fi
+)
 }
 
 update_bashrc() {
+  if [ ! -f ~/.bashrc ]; then
+    touch ~/.bashrc
+  fi
+
   write_bashrc <<"EOF"
 export PATH="$PATH:$HOME/bin"
 EOF
@@ -48,22 +58,23 @@ export PS1="\u@\h \[\e[32m\]\w \[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ "
 EOF
 
   write_bashrc <<"EOF"
-for file in /usr/local/etc/profile.d/*; do
-  source $file
+export PATH="$PATH:$HOME/bin"
 EOF
 
-  # reload bashrc
-  if [ -f ~/.bashrc ]; then
-      source ~/.bashrc
-  fi
+  write_bashrc <<"EOF"
+# bigger and shared history
+HISTCONTROL=ignoreboth:erasedups
+HISTSIZE=100000
+HISTFILESIZE=100000
+shopt -s histappend
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+EOF
+
+  echo "to reload bashrc: source ~/.bashrc"
 }
 
-
 copy_dots() {
-  # copy all the .*
   cp -r dots/. ~/
-
-  # install any custom scripts
   cp -r scripts/. ~/bin/
 
   # neovim config
