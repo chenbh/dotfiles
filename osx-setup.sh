@@ -1,50 +1,30 @@
 #!/bin/bash
-
+source ./_helpers.sh
 set -eux
 
-VIM_CONFIG="https://github.com/chenbh/dotnvim.git"
+# terminal
+brew install --cask iterm2
 
-function gimme() {
-    brew install "$@"
-}
+# essentials
+brew install \
+  python3 pip3
 
-function getme() {
-    brew cask install "$@"
-}
+# misc tools
+brew install \
+  ripgrep jq autojump
 
-# copy all the .*
-cp -r dots/. ~/
+# bitwarden cli
+brew install bitwarden-cli
 
-# install any custom scripts
-cp -r scripts/. ~/bin/
+# productiviy
+brew install --cask \
+  rectangle sensiblesidebuttons
 
-gimme python3 pip3
+# neovim
+brew install neovim
 
-gimme ripgrep
-
-gimme jq
-
-gimme fd
-
-gimme autojump
-
-gimme neovim
-
-gimme bitwarden-cli
-
-# window snapping
-getme rectangle
-
-# neovim plugins
 sudo pip3 install pynvim
 
-if ! [ -e ~/.config/nvim ]; then
-  git clone $VIM_CONFIG ~/.config/nvim --recursive
-fi
 
-# reload bashrc
-source ~/.bashrc
-
-echo "Additional installations"
-# mouse4/mouse5 -> backward/forward
-echo "https://github.com/archagon/sensible-side-buttons/releases"
+copy_dots
+update_bashrc
