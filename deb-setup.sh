@@ -2,7 +2,7 @@
 source ./_helpers.sh
 set -eux
 
-sudo mkdir -p /usr/local/etc/profile.d
+mkdir -p /usr/local/etc/profile.d
 sudo apt update
 
 # terminal
@@ -20,7 +20,7 @@ sudo corepack enable
 # misc tools
 sudo apt-get install -y \
  ripgrep jq fd-find autojump
-sudo cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
+cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
 
 # bitwarden cli
 sudo npm install -g @bitwarden/cli
