@@ -47,14 +47,12 @@ update_bashrc() {
   fi
 
   write_bashrc <<"EOF"
-export PATH="$PATH:$HOME/bin"
+source ~/.git-prompt.sh
+export PS1='\[\e[34m\]\W\[\e[32m\]$(__git_ps1 "[%s]")\[\e[m\]\$ '
 EOF
 
   write_bashrc <<"EOF"
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
-export PS1="\u@\h \[\e[32m\]\w \[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ "
+for f in /usr/local/etc/profile.d/*; do source $f; done
 EOF
 
   write_bashrc <<"EOF"

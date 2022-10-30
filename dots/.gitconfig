@@ -3,12 +3,25 @@
 	co = checkout
 	st = status
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	dt = difftool --no-prompt --dir-diff --tool vimfugitive
+	mt = mergetool --no-prompt --tool vimfugitive
+[difftool "vimfugitive"]
+	cmd = nvim -c Git difftool
+[mergetool "vimfugitive"]
+	cmd = nvim -c Git mergetool
 [push]
 	default = simple
+[pull]
+	rebase = true
+[status]
+	showStash = true
+[submodule]
+	recurse = true
+[trailer]
+	ifexists = addIfDifferent
 [url "git@github.com:"]
 	pushInsteadOf = https://github.com/
 	pushInsteadOf = git://github.com/
-[trailer]
-	ifexists = addIfDifferent
-[submodule]
-	recurse = true
+[user]
+	email = danielchen97dc@gmail.com
+	name = Bohan Chen
