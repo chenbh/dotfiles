@@ -6,12 +6,12 @@ WORKSPACE="$HOME/workspace"
 # $2: asset name e.g. nvim-linux64.deb. If empty, the source code tarball is used
 # output: $2, otherwise source_code.tar
 dl_gh_latest_release() {
-    if [ -n "$2" ]; then
-      url=$(curl -s "https://api.github.com/repos/$1/releases/latest" | jq -r --arg name "$2" '.assets[] | select(.name == $name) | .browser_download_url')
-      wget -O "$2" "$url"
-    else
+    if [ -z "${2+x}" ]; then
       url=$(curl -s "https://api.github.com/repos/$1/releases/latest" | jq -r '.tarball_url')
       wget -O "source_code.tar" "$url"
+    else
+      url=$(curl -s "https://api.github.com/repos/$1/releases/latest" | jq -r --arg name "$2" '.assets[] | select(.name == $name) | .browser_download_url')
+      wget -O "$2" "$url"
     fi
 }
 
@@ -64,7 +64,11 @@ copy_dots() {
   cp -r scripts/. ~/bin/
 
   # neovim config
-  if ! [ -e ~/.config/nvim ]; then
+  if [ -d ~/.config/nvim ]; then
+    pushd ~/.config/nvim
+      git pull
+    popd
+  else
     git clone https://github.com/chenbh/dotnvim.git ~/.config/nvim
   fi
 }

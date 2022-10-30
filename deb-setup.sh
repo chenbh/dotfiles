@@ -30,17 +30,21 @@ if [ "$ID" == "ubuntu" ]; then
   dl_gh_latest_release neovim/neovim nvim-linux64.deb
   sudo apt install ./nvim-linux64.deb && rm ./nvim-linux64.deb
 elif [ "$ID" == "raspbian" ]; then
-  if [ -d "$WORKSPACE/neovim" ]; then; rm -rf "$WORKSPACE/neovim"; fi
-  dl_gh_latest_release neovim/neovim
-  tar --strip-components=1 -C "$WORKSPACE/neovim" -xf source_code.tar && rm source_code.tar
-  cd "$WORKSPACE/neovim"
+  workdir="$WORKSPACE/neovim"
+  if [ ! -d "$WORKSPACE/neovim" ]; then
+    git clone https://github.com/neovim/neovim.git $workdir
+  fi
+
+  pushd "$workdir"
+  git fetch --tags --force && git checkout stable
 
   sudo apt-get install -y \
     ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
 
-  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/bin/nvim
+  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr
   sudo make install
-  make clean
+  popd
+
 else
   echo "Unable to install neovim: unknown OS type"
   exit 1
