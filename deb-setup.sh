@@ -15,6 +15,7 @@ sudo apt-get install -y \
 # unfortunately appears there's too many things reliant on nodejs
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
+sudo corepack enable
 
 # misc tools
 sudo apt-get install -y \
