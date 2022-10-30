@@ -2,29 +2,17 @@
 
 WORKSPACE="$HOME/workspace"
 
-# example: dl_gh_latest_release neovim/neovim nvim-linux64.deb
+# $1: GitHub repo e.g. neovim/neovim
+# $2: asset name e.g. nvim-linux64.deb. If empty, the source code tarball is used
+# output: $2, otherwise source_code.tar
 dl_gh_latest_release() {
-    repo="$1"
-    asset="$2"
-    url=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | jq -r --arg name "$asset" '.assets[] | select(.name == $name) | .browser_download_url')
-    wget -O "$asset" "$url"
-}
-
-# remap caps lock -> escape
-remap_keys() {
-  sudo cat > /tmp/keyboard <<EOF
-# KEYBOARD CONFIGURATION FILE
-
-# Consult the keyboard(5) manual page.
-
-XKBMODEL="pc105"
-XKBLAYOUT="us"
-XKBVARIANT=""
-XKBOPTIONS="caps:escape"
-
-BACKSPACE="guess"
-EOF
-  sudo mv /tmp/keyboard /etc/default/keyboard
+    if [ -n "$2" ]; then
+      url=$(curl -s "https://api.github.com/repos/$1/releases/latest" | jq -r --arg name "$2" '.assets[] | select(.name == $name) | .browser_download_url')
+      wget -O "$2" "$url"
+    else
+      url=$(curl -s "https://api.github.com/repos/$1/releases/latest" | jq -r '.tarball_url')
+      wget -O "source_code.tar" "$url"
+    fi
 }
 
 write_bashrc() {

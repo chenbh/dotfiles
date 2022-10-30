@@ -2,6 +2,7 @@
 source ./_helpers.sh
 set -eux
 
+sudo mkdir -p /usr/local/etc/profile.d
 sudo apt update
 
 # terminal
@@ -11,18 +12,39 @@ sudo apt-get install -y terminator
 sudo apt-get install -y \
   curl build-essential ca-certificates xclip python3 python3-pip
 
+# unfortunately appears there's too many things reliant on nodejs
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+
 # misc tools
 sudo apt-get install -y \
  ripgrep jq fd-find autojump
-sudo mkdir -p /usr/local/etc/profile.d
 sudo cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
 
 # bitwarden cli
-sudo snap install bw
+sudo npm install -g @bitwarden/cli
 
 # neovim
-dl_gh_latest_release neovim/neovim nvim-linux64.deb
-sudo apt install ./nvim-linux64.deb && rm ./nvim-linux64.deb
+source /etc/os-release
+if [ "$ID" == "ubuntu" ]; then
+  dl_gh_latest_release neovim/neovim nvim-linux64.deb
+  sudo apt install ./nvim-linux64.deb && rm ./nvim-linux64.deb
+elif [ "$ID" == "raspbian" ]; then
+  if [ -d "$WORKSPACE/neovim" ]; then; rm -rf "$WORKSPACE/neovim"; fi
+  dl_gh_latest_release neovim/neovim
+  tar --strip-components=1 -C "$WORKSPACE/neovim" -xf source_code.tar && rm source_code.tar
+  cd "$WORKSPACE/neovim"
+
+  sudo apt-get install -y \
+    ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+
+  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/bin/nvim
+  sudo make install
+  make clean
+else
+  echo "Unable to install neovim: unknown OS type"
+  exit 1
+fi
 
 sudo pip3 install pynvim
 
@@ -34,6 +56,20 @@ sudo update-alternatives --set editor /usr/bin/nvim
 
 sudo apt-get autoremove -y
 
-remap_keys
+# keyboard swap caps and escape
+sudo cat > /tmp/keyboard <<EOF
+# KEYBOARD CONFIGURATION FILE
+
+# Consult the keyboard(5) manual page.
+
+XKBMODEL="pc105"
+XKBLAYOUT="us"
+XKBVARIANT=""
+XKBOPTIONS="caps:escape"
+
+BACKSPACE="guess"
+EOF
+sudo mv /tmp/keyboard /etc/default/keyboard
+
 copy_dots
 update_bashrc

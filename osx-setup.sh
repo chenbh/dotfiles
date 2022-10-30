@@ -9,6 +9,9 @@ brew install --cask iterm2
 brew install \
   python3 pip3
 
+# unfortunately appears there's too many things reliant on nodejs
+brew install node
+
 # misc tools
 brew install \
   ripgrep jq autojump
