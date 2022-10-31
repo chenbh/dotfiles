@@ -15,16 +15,16 @@ dl_gh_latest_release() {
     fi
 }
 
-write_bashrc() {
+write_file() {
 # run cmd in subshell to not mess up any global `set -e`
 (
   set +e
   read -r -d '' str
-  grep -F "$str" ~/.bashrc
+  grep -F "$str" $1
   if [ $? != 0 ]; then
     # add newline
-    echo "" >> ~/.bashrc
-    echo "$str" >> ~/.bashrc
+    echo "" >> $1
+    echo "$str" >> $1
   fi
 )
 }
@@ -34,20 +34,20 @@ update_bashrc() {
     touch ~/.bashrc
   fi
 
-  write_bashrc <<"EOF"
+  write_file ~/.bashrc <<"EOF"
 source ~/.git-prompt.sh
 export PS1='\[\e[34m\]\W\[\e[32m\]$(__git_ps1 "[%s]")\[\e[m\]\$ '
 EOF
 
-  write_bashrc <<"EOF"
-for f in /usr/local/etc/profile.d/*; do source $f; done
+  write_file ~/.bashrc <<"EOF"
+for f in /usr/local/etc/profile.d/*.sh; do source $f; done
 EOF
 
-  write_bashrc <<"EOF"
+  write_file ~/.bashrc <<"EOF"
 export PATH="$PATH:$HOME/bin"
 EOF
 
-  write_bashrc <<"EOF"
+  write_file ~/.bashrc <<"EOF"
 # bigger and shared history
 HISTCONTROL=ignoreboth:erasedups
 HISTSIZE=100000

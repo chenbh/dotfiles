@@ -19,7 +19,7 @@ sudo corepack enable
 
 # misc tools
 sudo apt-get install -y \
- ripgrep jq fd-find autojump
+ ripgrep jq fd-find autojump bash-completion
 cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
 
 # bitwarden cli
@@ -51,7 +51,7 @@ else
   exit 1
 fi
 
-sudo pip3 install pynvim
+pip3 install pynvim
 
 sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
 sudo update-alternatives --set vim /usr/bin/nvim
