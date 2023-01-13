@@ -2,6 +2,9 @@
 
 WORKSPACE="$HOME/workspace"
 
+sudo mkdir -p /usr/local/etc/profile.d
+sudo chown $USER /usr/local/etc/profile.d
+
 # $1: GitHub repo e.g. neovim/neovim
 # $2: asset name e.g. nvim-linux64.deb. If empty, the source code tarball is used
 # output: $2, otherwise source_code.tar
@@ -41,6 +44,7 @@ EOF
 
   write_file ~/.bashrc <<"EOF"
 for f in /usr/local/etc/profile.d/*.sh; do source $f; done
+for f in /usr/local/etc/profile.d/*.bash; do source $f; done
 EOF
 
   write_file ~/.bashrc <<"EOF"

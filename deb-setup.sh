@@ -19,7 +19,7 @@ sudo corepack enable
 
 # misc tools
 sudo apt-get install -y \
- ripgrep jq fd-find autojump bash-completion
+ ripgrep jq fd-find autojump bash-completion fzf
 cp /usr/share/autojump/autojump.sh /usr/local/etc/profile.d/autojump.sh
 
 # bitwarden cli

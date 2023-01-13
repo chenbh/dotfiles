@@ -9,12 +9,17 @@ brew install --cask iterm2
 brew install \
   python3
 
+# GNU parity
+brew install \
+  binutils coreutils gnu-sed grep
+
 # unfortunately appears there's too many things reliant on nodejs
 brew install node
 
 # misc tools
 brew install \
-  ripgrep jq autojump bash-completion
+  ripgrep jq autojump bash-completion fzf
+cp /opt/homebrew/etc/profile.d/autojump.sh /usr/local/etc/profile.d/
 
 # bitwarden cli
 brew install bitwarden-cli
