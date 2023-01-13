@@ -18,7 +18,7 @@ brew install node
 
 # misc tools
 brew install \
-  ripgrep jq autojump bash-completion fzf
+  ripgrep jq autojump bash-completion@2 fzf
 cp /opt/homebrew/etc/profile.d/autojump.sh /usr/local/etc/profile.d/
 
 # bitwarden cli
@@ -36,6 +36,10 @@ pip3 install pynvim
 
 copy_dots
 update_bashrc
+
+write_file ~/.bashrc <<"EOF"
+for f in /opt/homebrew/etc/profile.d/*.sh; do source $f; done
+EOF
 
 write_file ~/.bash_profile <<"EOF"
 if [ -f ~/.bashrc ]; then

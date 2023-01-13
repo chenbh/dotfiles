@@ -44,11 +44,17 @@ EOF
 
   write_file ~/.bashrc <<"EOF"
 for f in /usr/local/etc/profile.d/*.sh; do source $f; done
-for f in /usr/local/etc/profile.d/*.bash; do source $f; done
+EOF
+
+  write_file ~/.bashrc <<"EOF"
+alias vim=nvim
+alias k=kubectl
+complete -F __start_kubectl k
 EOF
 
   write_file ~/.bashrc <<"EOF"
 export PATH="$PATH:$HOME/bin"
+export EDITOR="nvim"
 EOF
 
   write_file ~/.bashrc <<"EOF"
