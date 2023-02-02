@@ -6,7 +6,15 @@ mkdir -p /usr/local/etc/profile.d
 sudo apt update
 
 # terminal
-sudo apt-get install -y terminator
+if ! command -v kitty &> /dev/null
+then
+  curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+  ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
+  cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
+  cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
+  sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+  sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+fi
 
 # essentials
 sudo apt-get install -y \
