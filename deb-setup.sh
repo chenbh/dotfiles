@@ -3,26 +3,31 @@ source ./_helpers.sh
 set -eux
 
 mkdir -p /usr/local/etc/profile.d
+mkdir -p ~/bin
+sudo mkdir -p /etc/apt/keyrings
 sudo apt update
 
 # terminal
-if ! command -v kitty &> /dev/null
-then
-  curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-  ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
-  cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
-  cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
-  sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
-  sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
-fi
+# if ! command -v kitty &> /dev/null
+# then
+#   curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+#   ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
+#   cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
+#   cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
+#   sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+#   sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+# fi
 
 # essentials
 sudo apt-get install -y \
   curl build-essential ca-certificates xclip python3 python3-pip
 
 # unfortunately appears there's too many things reliant on nodejs
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
-sudo apt-get install -y nodejs
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+NODE_MAJOR=20
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+sudo apt-get update
+sudo apt-get install nodejs -y
 sudo corepack enable
 
 # misc tools
@@ -35,9 +40,9 @@ sudo npm install -g @bitwarden/cli
 
 # neovim
 source /etc/os-release
-if [ "$ID" == "ubuntu" ]; then
-  dl_gh_latest_release neovim/neovim nvim-linux64.deb
-  sudo apt install ./nvim-linux64.deb && rm ./nvim-linux64.deb
+if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
+  dl_gh_latest_release neovim/neovim nvim.appimage
+  install nvim.appimage ~/bin/nvim
 elif [ "$ID" == "raspbian" ]; then
   workdir="$WORKSPACE/neovim"
   if [ ! -d "$WORKSPACE/neovim" ]; then
