@@ -8,15 +8,16 @@ sudo mkdir -p /etc/apt/keyrings
 sudo apt update
 
 # terminal
-# if ! command -v kitty &> /dev/null
-# then
-#   curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-#   ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
-#   cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
-#   cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
-#   sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
-#   sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
-# fi
+if ! command -v kitty &> /dev/null
+then
+   curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
+     launch=n
+   ln -s ~/.local/kitty.app/bin/kitty ~/bin/
+   cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
+   cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
+   sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+   sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+fi
 
 # essentials
 sudo apt-get install -y \
@@ -42,7 +43,7 @@ sudo npm install -g @bitwarden/cli
 source /etc/os-release
 if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
   dl_gh_latest_release neovim/neovim nvim.appimage
-  install nvim.appimage ~/bin/nvim
+  sudo install nvim.appimage /usr/bin/nvim
 elif [ "$ID" == "raspbian" ]; then
   workdir="$WORKSPACE/neovim"
   if [ ! -d "$WORKSPACE/neovim" ]; then
@@ -58,14 +59,12 @@ elif [ "$ID" == "raspbian" ]; then
   make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr
   sudo make install
   popd
-
 else
   echo "Unable to install neovim: unknown OS type"
   exit 1
 fi
 
-pip3 install pynvim
-
+# pip3 install pynvim
 sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
 sudo update-alternatives --set vim /usr/bin/nvim
 sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
