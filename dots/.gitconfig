@@ -1,6 +1,6 @@
 [alias]
 	br = branch
-	ci = commit -s
+	ci = commit -s -v
 	co = checkout
 	st = status
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -26,3 +26,5 @@
 [user]
 	email = danielchen97dc@gmail.com
 	name = Bohan Chen
+[init]
+	defaultBranch = main
