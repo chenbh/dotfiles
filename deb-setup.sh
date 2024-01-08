@@ -7,21 +7,22 @@ mkdir -p ~/bin
 sudo mkdir -p /etc/apt/keyrings
 sudo apt update
 
+# essentials
+sudo apt-get install -y \
+  curl build-essential ca-certificates xclip python3 python3-pip
+
 # terminal
 if ! command -v kitty &> /dev/null
 then
    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin \
      launch=n
    ln -s ~/.local/kitty.app/bin/kitty ~/bin/
+   mkdir -p ~/.local/share/applications
    cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
    cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/
    sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
    sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
 fi
-
-# essentials
-sudo apt-get install -y \
-  curl build-essential ca-certificates xclip python3 python3-pip
 
 # unfortunately appears there's too many things reliant on nodejs
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
